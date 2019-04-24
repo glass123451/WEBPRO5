@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ADD CHOICE</title>
+    <style>
+        table, th, td{
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h2>Add choice(s) for {{ question }}</h2>
+    <h3 v-if="success">Create successfully!</h3>
+    <table>
+        <tr>
+            <th>
+                Choice Text
+            </th>
+            <th>
+                Choice Value
+            </th>
+            <th>
+                Delete
+            </th>
+        </tr>
+        <tr v-for="choice in choices">
+            <td><input type="text" v-model="choice.text"></td>
+            <td><input type="number" v-model="choice.value"></td>
+            <td><input type="button" @click="deleteChoice(choice)" value="DEL"></td>
+        </tr>
+    </table>
+    <p><input type="button" @click="addChoice" value="ADD NEW CHOICE">  <input type="button" @click="submit" value="SAVE DATA"></p>
+    <p>[[errorMsg]]</p>
+</div>
+<script src="{% static 'js/vue.js' %}"></script>
+<script src="{% static 'js/axios.min.js' %}"></script>
+<script src="{% static 'js/js.cookie.js'%}"></script>
+
+<script>
+    var csrftoken = Cookies.get('csrftoken');
+
+    var app = new Vue({
+        el: '#app',
+        delimiters: ["[[","]]"],
+        data: {
+            success: false,
+            errorMsg: '',
+            choices: []
+        },
+        methods: {
+            addChoice(){
+                this.choices.push(
+                    {
+                        text: '',
+                        value: 0
+                    }
+                )
+            },
+            deleteChoice(choice){
+            let index = this.choices.indexOf(choice)
+            this.choices.splice(index, 1)
+        },
+            submit(){
+            console.log(this.choices)
+            axios
+                .post('http://localhost:8000/polls/api/' + {{ question.id }} + '/add-choice/',
+                this.choices,
+                    {headers: {'X-CSRFTOKEN': csrftoken}}
+                )
+                .then(response =>{
+                    console.log(response)
+                    this.success = true
+                    this.errorMsg = response.data.no_choice
+                })
+                .catch(error =>{
+                    console.log(error.response)
+                    this.errorMsg = error.response.data.message
+                    
+                })
+        }
+        }
+
+    })
+</script>
+
+</body>
+</html>

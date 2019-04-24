@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Poll Detail</title>
+
+</head>
+<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'polls/css/style.css' %}">
+<body>
+
+    <h1>Poll: {{ poll.title }}</h1>
+<h3>Question list</h3>
+    <form method="post" action="{% url 'poll_detail' poll.id %}">
+    {% csrf_token %}
+    <div style="text-align: center">
+        <a href="{% url 'create-comment' poll.id %}">เพิ่ม Comment</a>
+        <input type="submit" value="SAVE">
+        <input type="button" value="CANCEL" onclick="window.location = {% url 'index' %}">
+    </div>
+<ul>
+    {% for question in poll.question_set.all %}
+    <li>
+
+
+            {{ question.text }}<br>
+            {% for choice in question.choice_set.all %}
+                <input type="radio" name="choice{{ question.id }}" value="{{ choice.id }}"
+                        {% if choice.answer %} checked="checked" {% endif %}>
+                {{ choice.text }} - {{ choice.answer }}<br>
+            {% endfor %}
+
+    </li>
+    {% endfor %}
+</ul>
+    </form>
+</body>
+</html>

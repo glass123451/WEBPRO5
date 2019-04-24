@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Poll App LOGIN Page</title>
+</head>
+<body>
+<h1>LOGIN to My Poll App</h1>
+<br>
+<p>
+<form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <table border="1">
+        {% if error %}
+            <tr>
+            <td colspan="2" style="text-align: center">
+                <span style="color: red">{{ error }}</span>
+            </td>
+            </tr>
+        {% endif %}
+        <tr>
+            <th>USERNAME: </th>
+            <td>
+                <input type="text" name="username">
+            </td>
+        </tr>
+        <tr>
+            <th>PASSWORD: </th>
+            <td><input type="password" name="password"></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="...">
+                <input type="hidden" name="next_url" value="{{ next_url }}">
+                <input type="submit" value="LOGIN"></td>
+            
+        </tr>
+    </table>
+</form>
+</p>
+
+</body>
+</html>

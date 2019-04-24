@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Comment</title>
+    <style>
+        .errorlist{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h1>New Comment</h1>
+<form method="post" action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Save">
+</form>
+
+</body>
+</html>
